@@ -1,4 +1,4 @@
-# config.py
+
 """
 Configuration file for the RAG pipeline.
 """
