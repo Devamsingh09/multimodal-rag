@@ -1,0 +1,23 @@
+# requirements.txt
+
+# Core LangChain and Ollama
+langchain
+langchain_community
+langchain_ollama
+
+# Vector Store
+qdrant-client
+
+# PDF Parsing (Multimodal)
+# This is the key library for text, tables, and image extraction
+unstructured[all]
+pi-heif
+unstructured-inference
+
+# Helper libraries
+python-dotenv
+pillow==10.0.0
+argparse
+
+# Fix for pdfminer compatibility issue
+pdfminer.six==20221105
