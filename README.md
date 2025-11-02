@@ -1,10 +1,4 @@
-Here is a complete, updated `README.md` file.
 
-This version is based on everything we've done and uses the **actual output from your terminal logs**. This is exactly what you need to submit for your assignment.
-
------
-
-````markdown
 # Multimodal RAG Pipeline for Educational Content
 
 This project is an intern assignment to build a fully functional, local-first Retrieval-Augmented Generation (RAG) pipeline. The system processes a complex PDF containing text, tables, and images, and allows a user to query its content.
