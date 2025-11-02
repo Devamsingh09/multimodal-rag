@@ -15,7 +15,7 @@ from unstructured.partition.pdf import partition_pdf
 
 import config
 
-# Suppress common warnings from unstructured
+# Suppressing common warnings from unstructured
 warnings.filterwarnings("ignore", category=UserWarning)
 
 def encode_image_to_base64(image: Image.Image) -> str:
@@ -32,7 +32,7 @@ def summarize_image(image_bytes: bytes, llm_vision: ChatOllama) -> str:
     """
     try:
         pil_image = Image.open(io.BytesIO(image_bytes))
-        # Resize for faster processing, LLaVA can handle smaller images
+        # Resizing for faster processing, LLaVA can handle smaller images
         pil_image.thumbnail((1024, 1024))
         
         img_b64 = encode_image_to_base64(pil_image)
@@ -69,7 +69,7 @@ def main():
         print(f"Error: PDF file not found at {config.PDF_PATH}")
         return
 
-    # 1. Initialize models from Ollama
+    # 1. Initializing models from Ollama
     try:
         embeddings = OllamaEmbeddings(
             model=config.TEXT_EMBEDDING_MODEL,
@@ -79,7 +79,7 @@ def main():
             model=config.IMAGE_SUMMARY_MODEL,
             base_url=config.OLLAMA_BASE_URL
         )
-        # Test connection
+        # Testing connection
         llm_vision.invoke("test")
         print("Ollama models initialized successfully.")
     except Exception as e:
@@ -90,7 +90,7 @@ def main():
         print("$ ollama pull llava")
         return
 
-    # 2. Partition the PDF using unstructured
+    # 2. Partitioning the PDF using unstructured
     print("Partitioning PDF with 'unstructured' (hi_res strategy)...")
     print("This may take several minutes and download models on first run...")
     
@@ -112,13 +112,13 @@ def main():
     
     documents = []
     
-    # 3. Process elements and create Documents
+    # 3. Processing elements and creating Documents
     for el in elements:
         element_type = str(type(el)).split('.')[-1].replace("'", "").replace(">", "")
         
         if element_type == "Image":
             if hasattr(el, 'image_bytes') and el.image_bytes:
-                # Generate a text summary for the image
+                # Generating a text summary for the image
                 summary = summarize_image(el.image_bytes, llm_vision)
                 documents.append(Document(
                     page_content=summary,
@@ -160,7 +160,7 @@ def main():
     print(f"Processed {len(documents)} text, table, and image chunks.")
     print("Creating and populating Qdrant vector store (this will take time)...")
 
-    # 4. Create and populate the Qdrant vector store
+    # 4. Creating and populate the Qdrant vector store
     # This will store files locally in the config.QDRANT_PATH directory
     Qdrant.from_documents(
         documents,
