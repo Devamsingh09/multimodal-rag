@@ -71,9 +71,8 @@ The `unstructured` library requires `poppler` and `tesseract` to read PDFs and i
 ### 4. Project Setup
 1.  **Clone Repository:**
     ```bash
-    git clone [your-repo-link]
-    cd [your-repo-name]
-    ```
+    git clone https://github.com/Devamsingh09/multimodal-rag.git
+    cd multimodal-rag
 2.  **Move Project (if needed):** Ensure the project is on a local hard drive (like `C:\`) and **not** a pendrive, which can cause disk space errors (`No space left on device`).
 3.  **Create `.env` File:** Create a `.env` file and add your Hugging Face token (used by `unstructured` to download helper models):
     ```ini
