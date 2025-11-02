@@ -13,8 +13,8 @@ from qdrant_client import QdrantClient
 
 import config
 
-# --- Caching Option B: Conversational Memory ---
-# Create a directory to store session histories
+# ---  Conversational Memory ---
+# Creating a directory to store session histories
 SESSION_DIR = Path("./chat_sessions")
 SESSION_DIR.mkdir(exist_ok=True)
 
@@ -64,7 +64,7 @@ def main():
     
     args = parser.parse_args()
 
-    # 1. Initialize models, vector store, and retriever
+    # 1. Initializing models, vector store, and retriever
     try:
         llm = ChatOllama(
             model=config.LLM_MODEL, 
@@ -75,7 +75,7 @@ def main():
             base_url=config.OLLAMA_BASE_URL
         )
         
-        # Connect to the existing local Qdrant
+        # Connecting to the existing local Qdrant
         qdrant_client = QdrantClient(url=config.QDRANT_URL)
         
         vector_store = Qdrant(
@@ -92,7 +92,7 @@ def main():
               "and that Ollama is running.")
         return
 
-    # 2. Load conversational memory (if session_id is provided)
+    # 2. Loading conversational memory (if session_id is provided)
     chat_history = []
     if args.session_id:
         print(f"--- Loading chat history for session: {args.session_id} ---")
@@ -100,7 +100,7 @@ def main():
 
     # 3. Define Chains
 
-    # --- Summarization Chain (Requirement 2.3) ---
+    # --- Summarization Chain (Requirement ) ---
     summarizer_prompt = ChatPromptTemplate.from_template(
         "Concisely summarize the following context, which was retrieved to answer a user's question. "
         "Focus on the key facts, formulas, and definitions.\n\n"
@@ -119,7 +119,7 @@ def main():
         ("human", "CONTEXT:\n{context}\n\nQUESTION:\n{question}")
     ])
 
-    # 4. Define the Full Chain (with LCEL)
+    # 4. Defining the Full Chain (with LCEL)
 
     # Retrieves documents based on the question
     retrieval_chain = (
@@ -137,19 +137,19 @@ def main():
             context=retrieval_chain
         ) |
         RunnablePassthrough.assign(
-            # Conditionally summarize the retrieved context
+            # Conditionally summarizing the retrieved context
             summary=RunnableLambda(
                 lambda x: summarizer_chain.invoke({"context": x["context"]})
                 if args.summarize else "N/A"
             )
         ) |
         RunnablePassthrough.assign(
-            # Pass the full context, history, and question to the final prompt
+            # Passing the full context, history, and question to the final prompt
             answer=(rag_prompt | llm | StrOutputParser())
         )
     )
 
-    # 5. Invoke the chain and print results
+    # 5. Invoking the chain and print results
     
     print(f"--- Querying for: '{args.question}' ---")
     result = full_rag_chain.invoke({"question": args.question})
@@ -171,7 +171,7 @@ def main():
     print(result["context"])
     print("-" * 30)
 
-    # 6. Save memory for next turn (if session_id is provided)
+    # 6. Saving memory for next turn (if session_id is provided)
     if args.session_id:
         chat_history.append(HumanMessage(content=args.question))
         chat_history.append(AIMessage(content=result["answer"]))
